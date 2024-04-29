@@ -1,9 +1,18 @@
 from pygame import *
+font.init()
+
 speed_x = 2
 speed_y = 2
 game = True
 finish = False
 LIGHT_BLUE = (200, 255, 255)
+
+font = font.SysFont('Arial', 30)
+
+win1 = font.render('Поражение 1 игрока!', True, (255, 9, 23))
+win2 = font.render('Поражение 2 игрока!', True, (255, 9, 23))
+
+
 class GameSprite(sprite.Sprite):
     def __init__(self, play_image, speed, x, y, h, l):
         super(). __init__()
@@ -73,7 +82,20 @@ while game:
             speed_y *= -1
 
         if sprite.collide_rect(player2, ball):
-            speed_x *= -1         
+            speed_x *= -1    
+
+        # Условие проигрыша
+        if ball.rect.x > 700:
+            window.blit(win2, (200, 200))
+            finish = True
+            
+
+        if ball.rect.x < -50:
+            window.blit(win1, (200, 200))
+            finish = True
+            
+
+                 
 
 
 
