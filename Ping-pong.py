@@ -1,4 +1,6 @@
 from pygame import *
+speed_x = 2
+speed_y = 2
 game = True
 finish = False
 LIGHT_BLUE = (200, 255, 255)
@@ -39,7 +41,7 @@ clock = time.Clock()
 
 player2 = Player('platform.bmp', 2, 20, 200, 150, 30)
 player1 = Player('platform.bmp', 2, 650, 200, 150, 30)
-ball = Player('Ball.bmp', 1.5, 100, 100, 45, 45)
+ball = Player('Ball.bmp', 1.5, 300, 200, 45, 45)
 
 while game:
     for e in event.get():
@@ -57,6 +59,25 @@ while game:
         player1.reset()
 
         ball.reset()
+
+        ball.rect.y += speed_y
+        ball.rect.x += speed_x
+
+        if ball.rect.y > 455:
+            speed_y *= -1
+
+        if sprite.collide_rect(player1, ball):
+            speed_x *= -1
+
+        if ball.rect.y <= 0:
+            speed_y *= -1
+
+        if sprite.collide_rect(player2, ball):
+            speed_x *= -1         
+
+
+
+
 
         clock.tick(60)  
         display.update()       
