@@ -1,40 +1,44 @@
 from pygame import *
 font.init()
 
-
 def section_2(player2, ball):
     height = player2.rect.bottom - player2.rect.top
-    if ball.rect.centery <= player2.rect.y + height * 1/4:
-        return -40
-
-    if ball.rect.centery <= player2.rect.y + height * 2/4:
-        return -20 
-
-    if ball.rect.centery <= player2.rect.y + height * 3/4:
-        return 20  
-
-    if ball.rect.centery <= player2.rect.y + height * 4/4:
-        return 40       
-
+    if ball.rect.centery <= player2.rect.y + height * 1/8:
+        return -45
+    if ball.rect.centery <= player2.rect.y + height * 2/8:
+        return -30 
+    if ball.rect.centery <= player2.rect.y + height * 3/8:
+        return -15  
+    if ball.rect.centery <= player2.rect.y + height * 4/8:
+        return 0     
+    if ball.rect.centery <= player2.rect.y + height * 5/8:
+        return 0    
+    if ball.rect.centery <= player2.rect.y + height * 6/8:
+        return 15
+    if ball.rect.centery <= player2.rect.y + height * 7/8:
+        return 30
+    if ball.rect.centery <= player2.rect.y + height * 8/8:
+        return 45              
 
 
 def section_1(player1, ball):
     height = player1.rect.bottom - player1.rect.top
-    if ball.rect.centery <= player1.rect.y + height * 1/4:
-        return -40
-
-    if ball.rect.centery <= player1.rect.y + height * 2/4:
-        return -20 
-
-    if ball.rect.centery <= player1.rect.y + height * 3/4:
-        return 20  
-
-    if ball.rect.centery <= player1.rect.y + height * 4/4:
-        return 40       
-
-
-
-
+    if ball.rect.centery <= player1.rect.y + height * 1/8:
+        return -45
+    if ball.rect.centery <= player1.rect.y + height * 2/8:
+        return -30 
+    if ball.rect.centery <= player1.rect.y + height * 3/8:
+        return -15  
+    if ball.rect.centery <= player1.rect.y + height * 4/8:
+        return 0     
+    if ball.rect.centery <= player1.rect.y + height * 5/8:
+        return 0    
+    if ball.rect.centery <= player1.rect.y + height * 6/8:
+        return 15
+    if ball.rect.centery <= player1.rect.y + height * 7/8:
+        return 30
+    if ball.rect.centery <= player1.rect.y + height * 8/8:
+        return 45              
 
 
 speed_x = 4
@@ -83,9 +87,9 @@ window.fill(LIGHT_BLUE)
 
 clock = time.Clock()
 
-player1 = Player('platform.bmp', 2, 3, 200, 150, 30)
-player2 = Player('platform.bmp', 2, 665, 200, 150, 30)
-ball = Player('Ball.bmp', 1.5, 300, 200, 45, 45)
+player1 = Player('platform.png', 2, 3, 200, 150, 30)
+player2 = Player('platform.png', 2, 665, 200, 150, 30)
+ball = Player('Ball.png', 1.5, 300, 200, 45, 45)
 
 #Обратный отсчёт
 counter, text = 50, '50'.rjust(3)
@@ -116,9 +120,9 @@ while game:
         ball.reset()
 
         #Движение мяча
-        ball.rect.y += speed_y
         ball.rect.x += speed_x
-
+        ball.rect.y += speed_y
+        
         if ball.rect.y > 455:
             speed_y *= -1
 
