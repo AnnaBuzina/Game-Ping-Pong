@@ -1,16 +1,52 @@
 from pygame import *
 font.init()
 
-speed_x = 3.5
-speed_y = 3.5
+
+def section_2(player2, ball):
+    height = player2.rect.bottom - player2.rect.top
+    if ball.rect.centery <= player2.rect.y + height * 1/4:
+        return -40
+
+    if ball.rect.centery <= player2.rect.y + height * 2/4:
+        return -20 
+
+    if ball.rect.centery <= player2.rect.y + height * 3/4:
+        return 20  
+
+    if ball.rect.centery <= player2.rect.y + height * 4/4:
+        return 40       
+
+
+
+def section_1(player1, ball):
+    height = player1.rect.bottom - player1.rect.top
+    if ball.rect.centery <= player1.rect.y + height * 1/4:
+        return -40
+
+    if ball.rect.centery <= player1.rect.y + height * 2/4:
+        return -20 
+
+    if ball.rect.centery <= player1.rect.y + height * 3/4:
+        return 20  
+
+    if ball.rect.centery <= player1.rect.y + height * 4/4:
+        return 40       
+
+
+
+
+
+
+speed_x = 4
+speed_y = 4
 game = True
 finish = False
 LIGHT_BLUE = (200, 255, 255)
 
 font = font.SysFont('Arial', 30)
 
-win1 = font.render('Поражение 1 игрока!', True, (255, 9, 23))
-win2 = font.render('Поражение 2 игрока!', True, (255, 9, 23))
+win2 = font.render('Поражение 1 игрока!', True, (255, 9, 23))
+win1 = font.render('Поражение 2 игрока!', True, (255, 9, 23))
 
 class GameSprite(sprite.Sprite):
     def __init__(self, play_image, speed, x, y, h, l):
@@ -47,8 +83,8 @@ window.fill(LIGHT_BLUE)
 
 clock = time.Clock()
 
-player2 = Player('platform.bmp', 2, 3, 200, 150, 30)
-player1 = Player('platform.bmp', 2, 665, 200, 150, 30)
+player1 = Player('platform.bmp', 2, 3, 200, 150, 30)
+player2 = Player('platform.bmp', 2, 665, 200, 150, 30)
 ball = Player('Ball.bmp', 1.5, 300, 200, 45, 45)
 
 #Обратный отсчёт
@@ -71,11 +107,11 @@ while game:
 
         window.blit(font.render(text, True, (255, 9, 23)), (300, 30))
 
-        player2.update_2()
-        player2.reset()
-
         player1.update_1()
         player1.reset()
+
+        player2.update_2()
+        player2.reset()
 
         ball.reset()
 
@@ -86,22 +122,26 @@ while game:
         if ball.rect.y > 455:
             speed_y *= -1
 
-        if sprite.collide_rect(player1, ball):
+        if sprite.collide_rect(player2, ball):
+            section_2(player2, ball) 
             speed_x *= -1
 
         if ball.rect.y <= 0:
             speed_y *= -1
 
-        if sprite.collide_rect(player2, ball):
-            speed_x *= -1    
+        if sprite.collide_rect(player1, ball):
+            section_1(player1, ball)
+            speed_x *= -1  
+
+            
 
         # Условие проигрыша
         if ball.rect.x > 700:
-            window.blit(win2, (200, 200))
+            window.blit(win1, (200, 200))
             finish = True
             
         if ball.rect.x < -50:
-            window.blit(win1, (200, 200))
+            window.blit(win2, (200, 200))
             finish = True
 
         if counter == 0:
