@@ -1,46 +1,27 @@
 from pygame import *
 font.init()
 
-def section_2(player2, ball):
-    height = player2.rect.bottom - player2.rect.top
-    if ball.rect.centery <= player2.rect.y + height * 1/8:
+def section(player, ball):
+    height = player.rect.bottom - player.rect.top
+    if ball.rect.centery <= player.rect.y + height * 1/8:
         return -45
-    if ball.rect.centery <= player2.rect.y + height * 2/8:
+    if ball.rect.centery <= player.rect.y + height * 2/8:
         return -30 
-    if ball.rect.centery <= player2.rect.y + height * 3/8:
+    if ball.rect.centery <= player.rect.y + height * 3/8:
         return -15  
-    if ball.rect.centery <= player2.rect.y + height * 4/8:
+    if ball.rect.centery <= player.rect.y + height * 4/8:
         return 0     
-    if ball.rect.centery <= player2.rect.y + height * 5/8:
+    if ball.rect.centery <= player.rect.y + height * 5/8:
         return 0    
-    if ball.rect.centery <= player2.rect.y + height * 6/8:
+    if ball.rect.centery <= player.rect.y + height * 6/8:
         return 15
-    if ball.rect.centery <= player2.rect.y + height * 7/8:
+    if ball.rect.centery <= player.rect.y + height * 7/8:
         return 30
-    if ball.rect.centery <= player2.rect.y + height * 8/8:
+    if ball.rect.centery <= player.rect.y + height * 8/8:
         return 45              
 
-
-def section_1(player1, ball):
-    height = player1.rect.bottom - player1.rect.top
-    if ball.rect.centery <= player1.rect.y + height * 1/8:
-        return -45
-    if ball.rect.centery <= player1.rect.y + height * 2/8:
-        return -30 
-    if ball.rect.centery <= player1.rect.y + height * 3/8:
-        return -15  
-    if ball.rect.centery <= player1.rect.y + height * 4/8:
-        return 0     
-    if ball.rect.centery <= player1.rect.y + height * 5/8:
-        return 0    
-    if ball.rect.centery <= player1.rect.y + height * 6/8:
-        return 15
-    if ball.rect.centery <= player1.rect.y + height * 7/8:
-        return 30
-    if ball.rect.centery <= player1.rect.y + height * 8/8:
-        return 45              
-
-
+score_1 = 0
+score_2 = 0
 speed_x = 4
 speed_y = 4
 game = True
@@ -80,6 +61,38 @@ class Player(GameSprite):
         if key_pressed[K_s] and self.rect.y < 350:
             self.rect.y += 5             
 
+class Ball(GameSprite):
+    def __init__(self, play_image, speed, x, y, h, l):
+        super().__init__(play_image, speed, x, y, h, l)
+        self.speed_x = speed_x
+        self.speed_y = speed_y
+
+    def update(self):
+        self.rect.x += self.speed_x
+        self.rect.y += self.speed_y   
+
+    def hit(self, player):
+        if sprite.collide_rect(self, player):
+            angle = section(player, self)
+            if abs(angle) == 45:
+                self.speed_x = 4
+                self.speed_y = 4
+            if abs(angle) == 30:
+                self.speed_x = 4
+                self.speed_y = 4
+            if abs(angle) == 15:
+                self.speed_x = 4
+                self.speed_y = 4  
+            if abs(angle) == 0:
+                self.speed_x = 4
+                self.speed_y = 4  
+
+            if angle < 0:
+                self.speed_y *= -1
+
+            if self.rect.x > 500/2:
+                self.speed_x *= -1                
+
 
 window = display.set_mode((700, 500))
 display.set_caption("Ping-pong")  
@@ -89,7 +102,7 @@ clock = time.Clock()
 
 player1 = Player('platform.png', 2, 3, 200, 150, 30)
 player2 = Player('platform.png', 2, 665, 200, 150, 30)
-ball = Player('Ball.png', 1.5, 300, 200, 45, 45)
+ball = Ball('Ball.png', 1.5, 300, 200, 45, 45)
 
 #Обратный отсчёт
 counter, text = 50, '50'.rjust(3)
@@ -106,7 +119,6 @@ while game:
             text = str(counter).rjust(3) if counter > 0 else 'Ничья!'    
 
     if finish != True:
-
         window.fill(LIGHT_BLUE)
 
         window.blit(font.render(text, True, (255, 9, 23)), (300, 30))
@@ -117,27 +129,27 @@ while game:
         player2.update_2()
         player2.reset()
 
+        ball.update()
         ball.reset()
 
-        #Движение мяча
-        ball.rect.x += speed_x
-        ball.rect.y += speed_y
-        
         if ball.rect.y > 455:
-            speed_y *= -1
-
-        if sprite.collide_rect(player2, ball):
-            section_2(player2, ball) 
-            speed_x *= -1
+            ball.speed_y *= -1
 
         if ball.rect.y <= 0:
-            speed_y *= -1
+            ball.speed_y *= -1
+
+
+        ball.hit(player1)
+        ball.hit(player2)
+
+        '''if sprite.collide_rect(player2, ball):
+            ball.speed_x *= -1
+
+        if ball.rect.y <= 0:
+            ball.speed_y *= -1
 
         if sprite.collide_rect(player1, ball):
-            section_1(player1, ball)
-            speed_x *= -1  
-
-            
+            ball.speed_x *= -1'''  
 
         # Условие проигрыша
         if ball.rect.x > 700:
