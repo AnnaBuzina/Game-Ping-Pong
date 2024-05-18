@@ -5,30 +5,31 @@ def section(player, ball):
     height = player.rect.bottom - player.rect.top
     if ball.rect.centery <= player.rect.y + height * 1/8:
         return -45
-    if ball.rect.centery <= player.rect.y + height * 2/8:
+    elif ball.rect.centery <= player.rect.y + height * 2/8:
         return -30 
-    if ball.rect.centery <= player.rect.y + height * 3/8:
+    elif ball.rect.centery <= player.rect.y + height * 3/8:
         return -15  
-    if ball.rect.centery <= player.rect.y + height * 4/8:
+    elif ball.rect.centery <= player.rect.y + height * 4/8:
         return 0     
-    if ball.rect.centery <= player.rect.y + height * 5/8:
+    elif ball.rect.centery <= player.rect.y + height * 5/8:
         return 0    
-    if ball.rect.centery <= player.rect.y + height * 6/8:
+    elif ball.rect.centery <= player.rect.y + height * 6/8:
         return 15
-    if ball.rect.centery <= player.rect.y + height * 7/8:
+    elif ball.rect.centery <= player.rect.y + height * 7/8:
         return 30
-    if ball.rect.centery <= player.rect.y + height * 8/8:
+    else:
         return 45              
 
 score_1 = 0
 score_2 = 0
-speed_x = 5
-speed_y = 5
+speed_x = 5.5
+speed_y = 5.5
 game = True
 finish = False
 LIGHT_BLUE = (200, 255, 255)
 RED = (255, 9, 23)
 GREEN = (0, 255, 0)
+
 
 font = font.SysFont('Arial', 30)
 
@@ -79,21 +80,19 @@ class Ball(GameSprite):
         if sprite.collide_rect(self, player):
             angle = section(player, self)
             if abs(angle) == 45:
-                self.speed_x = 5
-                self.speed_y = 5
+                self.speed_x = 5.5
+                self.speed_y = 5.5
             if abs(angle) == 30:
-                self.speed_x = 5
-                self.speed_y = 5
+                self.speed_x = 5.5
+                self.speed_y = 5.5
             if abs(angle) == 15:
-                self.speed_x = 5
-                self.speed_y = 5  
+                self.speed_x = 5.5
+                self.speed_y = 5.5 
             if abs(angle) == 0:
-                self.speed_x = 5
-                self.speed_y = 5  
-
+                self.speed_x = 5.5
+                self.speed_y = 5.5  
             if angle < 0:
                 self.speed_y *= -1
-
             if self.rect.x > 500/2:
                 self.speed_x *= -1                
 
@@ -107,6 +106,11 @@ clock = time.Clock()
 player1 = Player('platform.png', 2, 3, 200, 150, 30)
 player2 = Player('platform.png', 2, 665, 200, 150, 30)
 ball = Ball('Ball.png', 1.5, 300, 200, 45, 45)
+sprite_1 = GameSprite('спрайт.bmp', 0, 250, 250, 40, 40)
+sprite_2 = GameSprite('спрайт.bmp', 0, 550, 50, 40, 40)
+
+player1_big = Player('platform.png', 2, 3, 200, 170, 30)
+player1_big1 = Player('platform.png', 2, 3, 200, 190, 30)
 
 #Обратный отсчёт
 counter, text = 50, '50'.rjust(3)
@@ -138,14 +142,26 @@ while game:
         ball.update()
         ball.reset()
 
+        sprite_1.reset()
+        sprite_2.reset()
+
         if ball.rect.y > 455:
             ball.speed_y *= -1
 
         if ball.rect.y <= 0:
-            ball.speed_y *= -1
+            ball.speed_y = abs(ball.speed_y)
 
         ball.hit(player1)
         ball.hit(player2)
+
+
+        if sprite.collide_rect(ball, sprite_1):
+            player1_big.update_1()
+            player1_big1.update_1()
+            player1_big.reset()
+            player1_big1.reset()
+            
+                
 
         # Условие проигрыша
         if ball.rect.x > 700:
@@ -175,7 +191,7 @@ while game:
             ball = Ball('Ball.png', 1.5, 300, 200, 45, 45)
 
             if score_2 >= 3:
-                window.blit(win1, (200, 200))
+                window.blit(win2, (200, 200))
                 finish = True
 
         elif counter == 0:
