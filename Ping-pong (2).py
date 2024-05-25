@@ -106,8 +106,8 @@ clock = time.Clock()
 player1 = Player('platform.png', 2, 3, 200, 150, 30)
 player2 = Player('platform.png', 2, 665, 200, 150, 30)
 ball = Ball('Ball.png', 1.5, 300, 200, 45, 45)
-sprite_1 = GameSprite('спрайт.bmp', 0, 250, 250, 40, 40)
-sprite_2 = GameSprite('спрайт.bmp', 0, 550, 50, 40, 40)
+sprite_1 = GameSprite('спрайт.png', 0, 250, 250, 40, 40)
+sprite_2 = GameSprite('спрайт.png', 0, 550, 50, 40, 40)
 
 player1_big = Player('platform.png', 2, 3, 200, 170, 30)
 player1_big1 = Player('platform.png', 2, 3, 200, 190, 30)
@@ -124,7 +124,11 @@ while game:
         #обратный отсчёт
         if e.type == USEREVENT: 
             counter -= 1
-            text = str(counter).rjust(3) if counter > 0 else 'Ничья!'    
+            if counter > 0:
+                text = str(counter).rjust(3)    
+            else: 
+                if score_1 == score_2: 
+                    'Ничья!' 
 
     if finish != True:
         window.fill(LIGHT_BLUE)
@@ -144,6 +148,7 @@ while game:
 
         sprite_1.reset()
         sprite_2.reset()
+        
 
         if ball.rect.y > 455:
             ball.speed_y *= -1
@@ -156,10 +161,17 @@ while game:
 
 
         if sprite.collide_rect(ball, sprite_1):
-            player1_big.update_1()
+            if ball.rect.y > 500:
+            
+                sprite_1.kill()
+                print('1w')
+
+
+
+            '''player1_big.update_1()
             player1_big1.update_1()
             player1_big.reset()
-            player1_big1.reset()
+            player1_big1.reset()'''
             
                 
 
@@ -195,7 +207,14 @@ while game:
                 finish = True
 
         elif counter == 0:
-            finish = True
+            if score_1 > score_2:
+                window.blit(win1, (200, 200))
+                finish = True
+            elif score_2 > score_1:
+                window.blit(win2, (200, 200))
+                finish = True    
+            elif score_1 == score_2:
+                finish = True
 
         clock.tick(60)  
         display.update()       
