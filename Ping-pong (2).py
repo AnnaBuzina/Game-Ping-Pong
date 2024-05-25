@@ -30,11 +30,11 @@ LIGHT_BLUE = (200, 255, 255)
 RED = (255, 9, 23)
 GREEN = (0, 255, 0)
 
-
 font = font.SysFont('Arial', 30)
 
 win2 = font.render('Поражение 1 игрока!', True, RED)
 win1 = font.render('Поражение 2 игрока!', True, RED)
+no_win = font.render('Ничья!', True, RED)
 score_text_1 = font.render('Счёт: '+ str(score_1), 1, GREEN)
 score_text_2 = font.render('Счёт: '+ str(score_2), 1, GREEN)
 
@@ -45,7 +45,7 @@ class GameSprite(sprite.Sprite):
         self.l = l
         self.image = transform.scale(image.load(play_image), (l, h))
         self.speed = speed
-        self.rect = self.image.get_rect()  #создание прямоугольной подложки
+        self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
     def reset(self):
@@ -58,7 +58,6 @@ class Player(GameSprite):
             self.rect.y -= 5
         if key_pressed[K_DOWN] and self.rect.y < 350:
             self.rect.y += 5   
-
     def update_1(self):
         key_pressed = key.get_pressed()  
         if key_pressed[K_w] and self.rect.y > 10:
@@ -71,11 +70,9 @@ class Ball(GameSprite):
         super().__init__(play_image, speed, x, y, h, l)
         self.speed_x = speed_x
         self.speed_y = speed_y
-
     def update(self):
         self.rect.x += self.speed_x
         self.rect.y += self.speed_y   
-
     def hit(self, player):
         if sprite.collide_rect(self, player):
             angle = section(player, self)
@@ -96,24 +93,18 @@ class Ball(GameSprite):
             if self.rect.x > 500/2:
                 self.speed_x *= -1                
 
-
 window = display.set_mode((700, 500))
 display.set_caption("Ping-pong")  
 window.fill(LIGHT_BLUE)
 
 clock = time.Clock()
 
-player1 = Player('platform.png', 2, 3, 200, 150, 30)
-player2 = Player('platform.png', 2, 665, 200, 150, 30)
-ball = Ball('Ball.png', 1.5, 300, 200, 45, 45)
-sprite_1 = GameSprite('спрайт.png', 0, 250, 250, 40, 40)
-sprite_2 = GameSprite('спрайт.png', 0, 550, 50, 40, 40)
-
-player1_big = Player('platform.png', 2, 3, 200, 170, 30)
-player1_big1 = Player('platform.png', 2, 3, 200, 190, 30)
+player1 = Player('platform.png', 0.3, 3, 200, 150, 30)
+player2 = Player('platform.png', 0.3, 665, 200, 150, 30)
+ball = Ball('Ball.png', 2, 300, 200, 45, 45)
 
 #Обратный отсчёт
-counter, text = 50, '50'.rjust(3)
+counter, text = 100, '100'.rjust(3)
 time.set_timer(USEREVENT, 1000)
 
 while game:
@@ -146,10 +137,6 @@ while game:
         ball.update()
         ball.reset()
 
-        sprite_1.reset()
-        sprite_2.reset()
-        
-
         if ball.rect.y > 455:
             ball.speed_y *= -1
 
@@ -158,22 +145,6 @@ while game:
 
         ball.hit(player1)
         ball.hit(player2)
-
-
-        if sprite.collide_rect(ball, sprite_1):
-            if ball.rect.y > 500:
-            
-                sprite_1.kill()
-                print('1w')
-
-
-
-            '''player1_big.update_1()
-            player1_big1.update_1()
-            player1_big.reset()
-            player1_big1.reset()'''
-            
-                
 
         # Условие проигрыша
         if ball.rect.x > 700:
@@ -214,7 +185,8 @@ while game:
                 window.blit(win2, (200, 200))
                 finish = True    
             elif score_1 == score_2:
+                window.blit(no_win, (300, 200))
                 finish = True
 
-        clock.tick(60)  
-        display.update()       
+    clock.tick(60)  
+    display.update()       
